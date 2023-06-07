@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include "5x6_5_full.h"
 
 #define _QWERTY 0
 #define _LOWER 1
@@ -15,7 +16,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LCTL, KC_Z  , KC_X  , KC_C  , KC_V  , KC_B  ,                         KC_N  , KC_M  ,KC_COMM,KC_DOT ,KC_SLSH,KC_BSLASH,
         KC_GRV, KC_TILDE,KC_LBRC,KC_RBRC,                                                       KC_PLUS, KC_EQL, KC_MINS, KC_RCTL,
                                          RAISE,  KC_SPC, KC_TAB,         KC_ENT, KC_BSPC, LOWER,
-                                                 KC_HOME,KC_GRV          KC_END,  KC_DEL,
+                                                 KC_HOME,KC_GRV,         KC_END,  KC_DEL
 
     ),
 
@@ -26,7 +27,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,_______,_______,_______,_______,_______,                        _______, KC_P1 , KC_P2 , KC_P3 ,KC_EQL ,KC_UNDS,
         _______,_______,_______,KC_PSCR,                                                        _______, KC_P0, _______, _______,
                                          _______,_______,_______,       _______,_______,_______,
-                                                 _______,_______,       QK_BOOT,_______,
+                                                 _______,_______,       QK_BOOT,_______
     ),
 
     [_RAISE] = LAYOUT_5x6_5(
@@ -36,7 +37,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
           _______,_______,_______,_______,_______,_______,                        _______,_______,_______,_______,_______,KC_VOLD,
           _______,_______,_______,_______,                                                        KC_EQL ,_______,_______,_______,
                                           _______,_______,_______,       _______,_______,_______,
-                                                  _______,QK_BOOT,       _______,_______,
+                                                  _______,QK_BOOT,       _______,_______
     )
 };
 
