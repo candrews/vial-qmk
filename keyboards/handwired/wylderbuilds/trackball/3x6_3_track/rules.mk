@@ -12,7 +12,7 @@ OLED_DRIVER = SSD1306
 WPM_ENABLE = yes
 EXTRAKEY_ENABLE = yes       # Audio control and System control
 NKRO_ENABLE = yes           # Enable N-Key Rollover
-ENCODER_ENABLE = yes
-ENCODER_MAP_ENABLE = yes
+ENCODER_ENABLE = no
+ENCODER_MAP_ENABLE = no
 
 OPT_DEFS += -DHAL_USE_I2C=TRUE
