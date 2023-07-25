@@ -17,7 +17,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                  KC_LBRC,KC_RBRC,                                            KC_PLUS, KC_EQL,
                                                  RAISE, KC_SPC,                  LOWER,
                                                  KC_TAB, KC_HOME,                KC_ENT,
-                                                 KC_BSPC, KC_GRV,        KC_MUTE, KC_LALT
+                                                 KC_BSPC, KC_GRV,       KC_MUTE, KC_LALT
         ),
 
     [_LOWER] = LAYOUT_5x7(
@@ -62,9 +62,9 @@ void keyboard_post_init_user(void) {
 bool encoder_update_user(uint8_t index, bool clockwise) {
 //    if (index == 1) {
         if (clockwise) {
-            tap_code(KC_VOLD);
-        } else {
             tap_code(KC_VOLU);
+        } else {
+            tap_code(KC_VOLD);
         }
 //    } else if (index == 0) {
 //        if (clockwise) {
