@@ -2,6 +2,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include QMK_KEYBOARD_H
 #include "6x7_full_dual_track.h"
+
+#ifdef CONSOLE_ENABLE
+#include "print.h"
+#endif
+
 enum custom_layer {
 //    _COLEMAK,
     _QWERTY,
@@ -35,7 +40,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LCTL, KC_LCTL,  KC_LGUI, KC_LBRC,KC_RBRC,                                                    KC_PLUS, KC_EQL,KC_RGUI, KC_RALT,  KC_RCTL,
                                                             RAISE,                     LOWER,
                                                             KC_SPC,                    KC_ENTER,
-                                                            KC_TAB, KC_GRV,   KC_RALT, KC_RGUI
+                                                            KC_TAB, KC_HOME,  KC_MUTE, KC_RGUI
         ),
 
     [_LOWER] = LAYOUT_6x7(
@@ -147,16 +152,71 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #endif
 
 //    rgblight_enable();
-#ifdef RGBLIGHT_ENABLE
+
 void keyboard_post_init_user(void) {
     // Enable the LED layers
+#ifdef CONSOLE_ENABLE
+    debug_enable=true;
+    debug_matrix=true;
+    debug_keyboard=true;
+    debug_mouse=true;
+#else
+    debug_enable=false;
+    debug_matrix=false;
+    debug_keyboard=false;
+    debug_mouse=false;
+#endif
+
+#ifdef RGBLIGHT_ENABLE
     rgblight_layers = my_rgb_layers;
+#endif
+    pointing_device_set_cpi_on_side(true, CHARYBDIS_DRAGSCROLL_DPI); // LEFT
+    pointing_device_set_cpi_on_side(false, 2000);  // RIGHT
 }
+
+static void check_drag(report_mouse_t* mouse_report) {
+    static int16_t scroll_buffer_x = 0;
+    static int16_t scroll_buffer_y = 0;
+
+#    ifdef CHARYBDIS_DRAGSCROLL_REVERSE_X
+    scroll_buffer_x -= mouse_report->x;
+#    else
+    scroll_buffer_x += mouse_report->x;
+#    endif  // CHARYBDIS_DRAGSCROLL_REVERSE_X
+#    ifdef CHARYBDIS_DRAGSCROLL_REVERSE_Y
+    scroll_buffer_y -= mouse_report->y;
+#    else
+    scroll_buffer_y += mouse_report->y;
+#    endif  // CHARYBDIS_DRAGSCROLL_REVERSE_Y
+    mouse_report->x = 0;
+    mouse_report->y = 0;
+    if (abs(scroll_buffer_x) > 6) {
+        mouse_report->h = scroll_buffer_x > 0 ? 1 : -1;
+        scroll_buffer_x = 0;
+    }
+    if (abs(scroll_buffer_y) > 6) {
+        mouse_report->v = scroll_buffer_y > 0 ? 1 : -1;
+        scroll_buffer_y = 0;
+    }
+}
+
+report_mouse_t pointing_device_task_combined_user(report_mouse_t left_report, report_mouse_t right_report) {
+#ifdef CONSOLE_ENABLE
+    print("in pointing device task combined user\n");
+#endif
+    check_drag(&left_report);
+//    left_report.h = left_report.x;
+//    left_report.v = left_report.y;
+//    left_report.x = 0;
+//    left_report.y = 0;
+    return pointing_device_combine_reports(left_report, right_report);
+}
+
 //    rgblight_layers = my_rgb_layers;
 //    rgblight_enable_noeeprom(); // Enables RGB, without saving settings
 //    rgblight_sethsv_noeeprom_cyan();
 //    rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
-#endif
+
 
 #ifdef OLED_ENABLE
 
