@@ -49,11 +49,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 void keyboard_post_init_user(void) {
-    // Customise these values to desired behaviour
+#ifdef RGBLIGHT_ENABLE
+    // Enable the LED layers
+    rgblight_layers = my_rgb_layers;
+
+//    rgblight_layers = my_rgb_layers;
+//    rgblight_enable_noeeprom(); // Enables RGB, without saving settings
+//    rgblight_sethsv_noeeprom_cyan();
+//    rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+#endif
+
+#ifdef CONSOLE_ENABLE
     debug_enable=true;
     debug_matrix=true;
     debug_keyboard=true;
     debug_mouse=true;
+#else
+    debug_enable=false;
+    debug_matrix=false;
+    debug_keyboard=false;
+    debug_mouse=false;
+#endif
 }
 
 

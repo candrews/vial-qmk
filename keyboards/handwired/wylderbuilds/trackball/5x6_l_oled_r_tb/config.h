@@ -15,9 +15,10 @@
 
 #define USE_SERIAL
 #define SPLIT_HAND_PIN      GP26  // high = left, low = right
-//#define POINTING_DEVICE_INVERT_Y     // works on left COMMENTED OUT
-//#define ROTATIONAL_TRANSFORM_ANGLE  25 // works on leftb
-//#define POINTING_DEVICE_COMBINED
+//#define	SPLIT_HAND_PIN_LOW_IS_LEFT
+//#define SPLIT_HAND_MATRIX_GRID GP9, GP8
+//#define MASTER_RIGHT
+//#define MASTER_LEFT
 
 
 // Using Serial instead of I2C
@@ -27,12 +28,15 @@
 #define SERIAL_PIO_USE_PIO0
 #define SERIAL_USART_TIMEOUT     100  // USART driver timeout. default 100
 #define SERIAL_USART_SPEED 921600
-//#define SERIAL_USART_PIN_SWAP```````````
+//#define SERIAL_DEBUG
+//#define SERIAL_USART_PIN_SWAP
 
 #define RP2040_BOOTLOADER_DOUBLE_TAP_RESET
 #define RP2040_BOOTLOADER_DOUBLE_TAP_RESET_TIMEOUT 200U
 #define RP2040_BOOTLOADER_DOUBLE_TAP_RESET_LED_MASK 0U
 
+/* key matrix size */
+// Columns are doubled-up
 /* key matrix size */
 // Columns are doubled-up
 #define MATRIX_ROWS 12
@@ -64,30 +68,62 @@
 
 #define SPLIT_TRANSACTION_IDS_KB RPC_ID_KB_CONFIG_SYNC
 
-#    define SPLIT_MODS_ENABLE
-#    define SPLIT_WPM_ENABLE
-#    define SPLIT_LAYER_STATE_ENABLE
-#    define SPLIT_OLED_ENABLE
-#    define SPLIT_LED_STATE_ENABLE
+//#define CHARYBDIS_MINIMUM_DEFAULT_DPI 1200
+//#define CHARYBDIS_DEFAULT_DPI_CONFIG_STEP 200
+//#define CHARYBDIS_MINIMUM_SNIPING_DPI 400
+//#define CHARYBDIS_SNIPING_DPI_CONFIG_STEP 200
 
-
+//// Rotary Encoder ////
+// GP21
+// GP22
 
 //// Sensor Notes ////
 //// Pi Pico pins ////
-// 3V3  -- Power (not 3v3_EN)
-// GP17 -- CS pin
+// 3V3  -- Power (not 3v3_EN!)
+// GP21 -- CS pin
 // GP20 -- MISO pin
 // GP19 -- MOSI pin
 // GP18 -- SCK pin clock
 // GND  -- GND
 
-#define SPLIT_MODS_ENABLE
+// WS2812 RGB LED strip input and number of LEDs
+//#ifdef RGBLIGHT_ENABLE
+//#define RGB_DI_PIN GP17
+//#define RGBLED_NUM 34
+////#define DRIVER_LED_TOTAL 34
+//#define RGBLED_SPLIT { 17, 17 }
+//#define STM32_SYSCLK KINETIS_SYSCLK_FREQUENCY
+//#define NOP_FUDGE 0.4
+//#endif
+
+#ifdef RGBLIGHT_ENABLE
+#define RGBLIGHT_LAYERS
+//#define WS2812_PIO_USE_PIO1
+//#define WS2812_PIO_USE_PIO1
+#define RGB_DI_PIN GP27 // can use trackball jack if not used
+//#define WS2812_EXTERNAL_PULLUP
+#define RGBLED_NUM 24
+//#define DRIVER_LED_TOTAL 34
+#define RGBLED_SPLIT { 12, 12 }
+#define RGBLIGHT_SPLIT
+#define RGBLIGHT_EFFECT_RGB_TEST
+#define RGBLIGHT_EFFECT_BREATHING
+#define RGBLIGHT_EFFECT_RAINBOW_MOOD
+#define RGBLIGHT_EFFECT_SNAKE
+#define RGBLIGHT_EFFECT_TWINKLE
+#define RGBLIGHT_HUE_STEP 8
+#define RGBLIGHT_SAT_STEP 8
+#define RGBLIGHT_VAL_STEP 17
+#define RGBLIGHT_LIMIT_VAL 255
+//#define STM32_SYSCLK KINETIS_SYSCLK_FREQUENCY
+#define NOP_FUDGE 0.4  // may not be needed if ws driver loaded
+#endif
+
 //// OLED Pins and Driver
 #ifdef OLED_ENABLE
 #define I2C_DRIVER I2CD1
 #define I2C1_SDA_PIN GP16
 #define I2C1_SCL_PIN GP17
-#define RGBLIGHT_LAYERS
 // OLED Options
 #define SPLIT_OLED_ENABLE
 #define SPLIT_WPM_ENABLE
