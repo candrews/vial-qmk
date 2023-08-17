@@ -1,26 +1,26 @@
 #include QMK_KEYBOARD_H
 #include "5x6_track.h"
 
-#define _WORKMAN 0
-#define _QWERTY 1
-#define _LOWER 2
-#define _RAISE 3
+//#define _WORKMAN 0
+#define _QWERTY 0
+#define _LOWER 1
+#define _RAISE 2
 
 #define QWERTY MO(_QWERTY)
 #define RAISE MO(_RAISE)
 #define LOWER MO(_LOWER)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [_WORKMAN] = LAYOUT_5x6(
-        KC_ESC , KC_1  , KC_2  , KC_3  , KC_4  , KC_5  ,                      KC_6  , KC_7  , KC_8  , KC_9  , KC_0  ,KC_BSPC,
-        KC_TAB , KC_Q  , KC_D  , KC_R  , KC_W  , KC_B  ,                      KC_J  , KC_F  , KC_U  , KC_P  , KC_SCLN,KC_MINS,
-        KC_LSFT, KC_A  , KC_S  , KC_H  , KC_T  , KC_G  ,                      KC_Y  , KC_N  , KC_E  , KC_O  , KC_I , KC_QUOT,
-        KC_LCTL, KC_Z  , KC_X  , KC_M  , KC_C  , KC_V  ,                      KC_K  , KC_L  ,KC_COMM,KC_DOT ,KC_SLSH,KC_BSLASH,
-                         KC_LBRC,KC_RBRC,                                                    KC_PLUS, KC_EQL,
-                                                 RAISE, KC_SPC,               LOWER,
-                                                 KC_TAB, KC_BSPC,             KC_ENT,
-                                                 QWERTY, KC_GRV,     KC_DEL, KC_LALT
-        ),
+//    [_WORKMAN] = LAYOUT_5x6(
+//        KC_ESC , KC_1  , KC_2  , KC_3  , KC_4  , KC_5  ,                      KC_6  , KC_7  , KC_8  , KC_9  , KC_0  ,KC_BSPC,
+//        KC_TAB , KC_Q  , KC_D  , KC_R  , KC_W  , KC_B  ,                      KC_J  , KC_F  , KC_U  , KC_P  , KC_SCLN,KC_MINS,
+//        KC_LSFT, KC_A  , KC_S  , KC_H  , KC_T  , KC_G  ,                      KC_Y  , KC_N  , KC_E  , KC_O  , KC_I , KC_QUOT,
+//        KC_LCTL, KC_Z  , KC_X  , KC_M  , KC_C  , KC_V  ,                      KC_K  , KC_L  ,KC_COMM,KC_DOT ,KC_SLSH,KC_BSLASH,
+//                         KC_LBRC,KC_RBRC,                                                    KC_PLUS, KC_EQL,
+//                                                 RAISE, KC_SPC,               LOWER,
+//                                                 KC_TAB, KC_BSPC,             KC_ENT,
+//                                                 QWERTY, KC_GRV,     KC_DEL, KC_LALT
+//        ),
 
     [_QWERTY] = LAYOUT_5x6(
         KC_ESC , KC_1  , KC_2  , KC_3  , KC_4  , KC_5  ,                      KC_6  , KC_7  , KC_8  , KC_9  , KC_0  ,KC_BSPC,
@@ -30,7 +30,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                          KC_LBRC,KC_RBRC,                                                    KC_PLUS, KC_EQL,
                                                  RAISE, KC_SPC,               LOWER,
                                                  KC_TAB, KC_BSPC,             KC_ENT,
-                                                 KC_HOME, KC_GRV,     KC_DEL, KC_LALT
+                                                 KC_HOME, KC_GRV,     KC_HOME, KC_LALT
         ),
 
     [_LOWER] = LAYOUT_5x6(
@@ -41,7 +41,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                          _______,KC_PSCR,                                                     _______, KC_P0,
                                                 _______,_______,             _______,
                                                 KC_BTN3,KC_BTN1,             _______,
-                                                SNIPING,DRGSCRL,     _______,QK_BOOT
+                                                SNIPING,DRGSCRL,     KC_MUTE,QK_BOOT
 
         ),
 
@@ -53,44 +53,31 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                         _______,_______,                                                     KC_EQL ,_______,
                                                 _______,_______,             _______,
                                                 _______,_______,             _______,
-                                                QK_BOOT,_______,     _______,_______
+                                                QK_BOOT,_______,     KC_MUTE,_______
         )
 };
 
-//#if defined(ENCODER_MAP_ENABLE)
-//const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
-//    [_QWERTY] =   { ENCODER_CCW_CW(KC_MS_WH_UP, KC_MS_WH_DOWN)  },
-//    [_LOWER] =  { ENCODER_CCW_CW(RGB_HUD, RGB_HUI)  },
-//    [_RAISE] =  { ENCODER_CCW_CW(RGB_VAD, RGB_VAI)  },
-//};
-//#endif
 
-#ifdef ENCODER_ENABLE
-bool encoder_update_user(uint8_t index, bool clockwise) {
-    switch(get_highest_layer(layer_state|default_layer_state)) {
-        case _QWERTY:
-        case _RAISE:
-            if (index == 0) {
-                if (clockwise) {
-                    tap_code(KC_VOLD);
-                } else {
-                    tap_code(KC_VOLU);
-                }
-            }
-            break;
-        case _LOWER:
-            if (index == 0) {
-                if (clockwise) {
-                    tap_code(KC_PGUP);
-                } else {
-                    tap_code(KC_PGDN);
-                }
-            }
-            break;
-    }
-    return false;
-}
+#if defined(ENCODER_MAP_ENABLE)
+const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
+    [_QWERTY] =   { ENCODER_CCW_CW(KC_MS_WH_DOWN, KC_MS_WH_UP) },
+    [_LOWER] =   { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
+    [_RAISE] =   { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) }
+};
 #endif
+
+//#ifdef ENCODER_ENABLE
+//bool encoder_update_user(uint8_t index, bool clockwise) {
+//
+//    if (clockwise) {
+//        tap_code(KC_VOLD);
+//    } else {
+//        tap_code(KC_VOLU);
+//    }
+//
+//    return false;
+//}
+//#endif
 
 #ifdef OLED_ENABLE
 
