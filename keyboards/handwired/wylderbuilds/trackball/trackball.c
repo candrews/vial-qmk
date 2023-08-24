@@ -17,6 +17,7 @@
 #include "trackball.h"
 #include "transactions.h"
 #include <string.h>
+#include "print.h"
 
 #ifdef CONSOLE_ENABLE
 #    include "print.h"
@@ -191,6 +192,7 @@ void charybdis_set_pointer_dragscroll_enabled(bool enable) {
 static void pointing_device_task_charybdis(report_mouse_t* mouse_report) {
     static int16_t scroll_buffer_x = 0;
     static int16_t scroll_buffer_y = 0;
+    print("In poingint_device_task_charybdis");
     if (g_charybdis_config.is_dragscroll_enabled) {
 #    ifdef CHARYBDIS_DRAGSCROLL_REVERSE_X
         scroll_buffer_x -= mouse_report->x;

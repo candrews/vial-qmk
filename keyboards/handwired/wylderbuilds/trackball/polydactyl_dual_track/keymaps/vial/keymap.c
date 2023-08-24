@@ -19,9 +19,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_BTN3, KC_LSFT , KC_A , KC_S , KC_D , KC_F , KC_G  ,                  KC_H , KC_J ,  KC_K ,  KC_L , KC_SCLN,KC_LSFT , DRGSCRL,
         KC_BTN1, KC_LCTL , KC_Z , KC_X , KC_C , KC_V , KC_B  ,                  KC_N , KC_M ,  KC_COMM,KC_DOT,KC_SLSH,KC_LCTL  ,KC_BTN1,
         KC_LCTL, KC_LALT,  KC_LGUI,KC_LBRC,KC_RBRC,                                            KC_PLUS, KC_EQL,KC_RGUI,KC_RALT, KC_RCTL,
-                                       RAISE , KC_SPC , KC_TAB, KC_GRV,        LOWER,
-                                                                                KC_ENTER,
-                                                                        KC_DEL, KC_LALT
+                                                       RAISE ,                  LOWER,
+                                                       KC_SPC,                  KC_ENTER,
+                                                      KC_TAB, KC_GRV,    KC_DEL, KC_LALT
         ),
 
     [_LOWER] = LAYOUT_6x7_4(
@@ -31,9 +31,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______,KC_HOME,KC_PGUP,KC_PGDN,KC_END ,KC_LPRN,                 KC_RPRN, KC_P4 , KC_P5 , KC_P6 ,KC_MINS,KC_PIPE, _______,
         _______, _______,_______,_______,_______,_______,_______,                 _______, KC_P1 , KC_P2 , KC_P3 ,KC_EQL ,KC_UNDS, _______,
         _______, _______,_______,_______,KC_PSCR,                                                  _______, KC_P0, _______,_______, _______,
-                                       _______,_______,_______, _______,          _______,
-                                                                                  _______,
-                                                                         _______, _______
+                                                        _______,                   _______,
+                                                        _______,                   _______,
+                                                       _______, _______,   _______, _______
         ),
 
     [_RAISE] = LAYOUT_6x7_4(
@@ -43,16 +43,53 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,_______,_______,_______,_______,_______,_______,                  _______,_______,_______,_______,_______,KC_VOLD, _______,
         _______,_______,_______,_______,_______,_______,_______,                  _______,_______,_______,_______,_______,_______, _______,
         _______, _______,_______, _______,_______,                                                KC_EQL ,_______,_______,_______,_______,
-                                     _______, KC_BTN1,KC_BTN3, DRGSCRL,           _______,
-                                                                                  _______,
-                                                                         _______, _______
+                                                       _______,                   _______,
+                                                       KC_BTN1,                   _______,
+                                                      KC_BTN3, DRGSCRL,   _______, _______
         )
 };
 
+//static void check_drag(report_mouse_t* mouse_report) {
+//    static int16_t scroll_buffer_x = 0;
+//    static int16_t scroll_buffer_y = 0;
+//
+//#    ifdef CHARYBDIS_DRAGSCROLL_REVERSE_X
+//    scroll_buffer_x -= mouse_report->x;
+//#    else
+//    scroll_buffer_x += mouse_report->x;
+//#    endif  // CHARYBDIS_DRAGSCROLL_REVERSE_X
+//#    ifdef CHARYBDIS_DRAGSCROLL_REVERSE_Y
+//    scroll_buffer_y -= mouse_report->y;
+//#    else
+//    scroll_buffer_y += mouse_report->y;
+//#    endif  // CHARYBDIS_DRAGSCROLL_REVERSE_Y
+//    mouse_report->x = 0;
+//    mouse_report->y = 0;
+//    if (abs(scroll_buffer_x) > 6) {
+//        mouse_report->h = scroll_buffer_x > 0 ? 1 : -1;
+//        scroll_buffer_x = 0;
+//    }
+//    if (abs(scroll_buffer_y) > 6) {
+//        mouse_report->v = scroll_buffer_y > 0 ? 1 : -1;
+//        scroll_buffer_y = 0;
+//    }
+//}
+
+//report_mouse_t pointing_device_task_combined_user(report_mouse_t left_report, report_mouse_t right_report) {
+//#ifdef CONSOLE_ENABLE
+//    print("in pointing device task combined user\n");
+//#endif
+//    check_drag(&left_report);
+//    //    left_report.h = left_report.x;
+//    //    left_report.v = left_report.y;
+//    //    left_report.x = 0;
+//    //    left_report.y = 0;
+//    return pointing_device_combine_reports(left_report, right_report);
+//}
 
 #ifdef OLED_ENABLE
 
-000oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     if (is_keyboard_master()) {
         return OLED_ROTATION_270;
     }

@@ -1,5 +1,5 @@
 {
-  "keyboard_name": "Dactyl-Manuform (Polydactyl_4_track)",
+  "keyboard_name": "Dactyl-Manuform (Polydactyl_dual_track)",
   "manufacturer": "wylderbuilds",
   "url": "https://wylderbuilds.com",
   "maintainer": "qmk",
@@ -7,7 +7,7 @@
   "processor": "RP2040",
   "usb": {
     "vid": "0x9953",
-    "pid": "0x0046",
+    "pid": "0x0054",
     "device_version": "0.0.1"
   },
   "width": 22,
@@ -17,7 +17,7 @@
     "cols": 7
   },
   "layouts": {
-    "LAYOUT_6x7_4": {
+    "LAYOUT_6x7_dual": {
       "layout": [
         {
           "label": "0,3",
@@ -390,8 +390,13 @@
           "y": 5
         },
         {
+          "label": "6,6",
+          "x": 7.25,
+          "y": 5.25
+        },
+        {
           "label": "13,0",
-          "x": 11.5,
+          "x": 11.75,
           "y": 5.25
         },
         {
@@ -425,39 +430,34 @@
           "y": 5.5
         },
         {
-          "label": "13,1",
-          "x": 11.5,
+          "label": "6,5",
+          "x": 7.25,
           "y": 6.5
         },
         {
+          "label": "13,1",
+          "x": 11.75,
+          "y": 6.5
+        },
+        {
+          "label": "6,3",
+          "x": 7.25,
+          "y": 7.75
+        },
+        {
+          "label": "6,4",
+          "x": 8.5,
+          "y": 7.75
+        },
+        {
           "label": "13,2",
-          "x": 10.25,
+          "x": 10.5,
           "y": 7.75
         },
         {
           "label": "13,3",
-          "x": 11.5,
+          "x": 11.75,
           "y": 7.75
-        },
-        {
-          "label": "6,3",
-          "x": 6.75,
-          "y": 4.5
-        },
-        {
-          "label": "6,4",
-          "x": 7.75,
-          "y": 4.5
-        },
-        {
-          "label": "6,5",
-          "x": 8.75,
-          "y": 4.5
-        },
-        {
-          "label": "6,6",
-          "x": 9.75,
-          "y": 4.5
         }
       ]
     }
