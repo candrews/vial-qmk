@@ -1,1 +1,1 @@
-#include "dual_trackball.h"
+#include "trackball.h"

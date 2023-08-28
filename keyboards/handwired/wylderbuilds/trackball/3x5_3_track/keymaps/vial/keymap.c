@@ -26,7 +26,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_LOWER] = LAYOUT_split_3x5_3(
         KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,            KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN,
         S(KC_9), S(KC_0), KC_LBRC,  KC_RBRC,KC_EQL,             _______,    KC_MINS, KC_EQL,  KC_PIPE, _______,
-        _______, _______, _______,  _______,_______,            _______,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT,
+        _______, _______, _______,  KC_BTN1,DRGSCRL,            _______,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT,
                           _______,   _______,  _______,      QK_BOOT, _______, _______
         )
 };

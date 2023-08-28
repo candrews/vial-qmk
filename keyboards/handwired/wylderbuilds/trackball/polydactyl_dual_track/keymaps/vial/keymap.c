@@ -2,6 +2,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include QMK_KEYBOARD_H
 #include "polydactyl_dual_track.h"
+//#include "trackball.h"
+//#include "print.h"
+
 enum custom_layer {
     _QWERTY,
     _LOWER,
@@ -13,7 +16,7 @@ enum custom_layer {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT_6x7_4(
-        KC_ESC,  KC_F1  ,  KC_F2 ,KC_F3 ,KC_F4 ,KC_F5 ,KC_F6 ,                  KC_F7, KC_F8 , KC_F9 , KC_F10,KC_F11, KC_F12  , _______,
+        KC_ESC,  KC_F1  ,  KC_F2 ,KC_F3 ,KC_F4 ,KC_F5 ,KC_F6 ,                  KC_F7, KC_F8 , KC_F9 , KC_F10,KC_F11, KC_F12  , DB_TOGG,
         DRGSCRL, KC_GRV ,  KC_1 , KC_2 , KC_3 , KC_4 , KC_5  ,                  KC_6 , KC_7 ,  KC_8 ,  KC_9 , KC_0  , KC_LBRC , KC_RBRC,
         SNIPING, KC_TAB ,  KC_Q , KC_W , KC_E , KC_R , KC_T  ,                  KC_Y , KC_U ,  KC_I ,  KC_O , KC_P  , KC_QUOT , KC_BACKSLASH,
         KC_BTN3, KC_LSFT , KC_A , KC_S , KC_D , KC_F , KC_G  ,                  KC_H , KC_J ,  KC_K ,  KC_L , KC_SCLN,KC_LSFT , DRGSCRL,
@@ -49,43 +52,64 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         )
 };
 
-//static void check_drag(report_mouse_t* mouse_report) {
-//    static int16_t scroll_buffer_x = 0;
-//    static int16_t scroll_buffer_y = 0;
+void keyboard_post_init_user(void) {
+
+    debug_enable=false;
+    debug_matrix=false;
+    debug_keyboard=false;
+    debug_mouse=false;
+    pointing_device_set_cpi_on_side(false, 8200);
+    pointing_device_set_cpi_on_side(true, 8200);
+}
+
+
 //
-//#    ifdef CHARYBDIS_DRAGSCROLL_REVERSE_X
-//    scroll_buffer_x -= mouse_report->x;
-//#    else
-//    scroll_buffer_x += mouse_report->x;
-//#    endif  // CHARYBDIS_DRAGSCROLL_REVERSE_X
-//#    ifdef CHARYBDIS_DRAGSCROLL_REVERSE_Y
-//    scroll_buffer_y -= mouse_report->y;
-//#    else
-//    scroll_buffer_y += mouse_report->y;
-//#    endif  // CHARYBDIS_DRAGSCROLL_REVERSE_Y
-//    mouse_report->x = 0;
-//    mouse_report->y = 0;
-//    if (abs(scroll_buffer_x) > 6) {
-//        mouse_report->h = scroll_buffer_x > 0 ? 1 : -1;
-//        scroll_buffer_x = 0;
-//    }
-//    if (abs(scroll_buffer_y) > 6) {
-//        mouse_report->v = scroll_buffer_y > 0 ? 1 : -1;
-//        scroll_buffer_y = 0;
-//    }
-//}
+static void check_drag(report_mouse_t* mouse_report) {
+    static int16_t scroll_buffer_x = 0;
+    static int16_t scroll_buffer_y = 0;
+
+#    ifdef CHARYBDIS_DRAGSCROLL_REVERSE_X
+    scroll_buffer_x -= mouse_report->x;
+#    else
+    scroll_buffer_x += mouse_report->x;
+#    endif  // CHARYBDIS_DRAGSCROLL_REVERSE_X
+#    ifdef CHARYBDIS_DRAGSCROLL_REVERSE_Y
+    scroll_buffer_y -= mouse_report->y;
+#    else
+    scroll_buffer_y += mouse_report->y;
+#    endif  // CHARYBDIS_DRAGSCROLL_REVERSE_Y
+    mouse_report->x = 0;
+    mouse_report->y = 0;
+    if (abs(scroll_buffer_x) > 12) {
+        mouse_report->h = scroll_buffer_x > 0 ? 1 : -1;
+        scroll_buffer_x = 0;
+    }
+    if (abs(scroll_buffer_y) > 12) {
+        mouse_report->v = scroll_buffer_y > 0 ? 1 : -1;
+        scroll_buffer_y = 0;
+    }
+}
 
 //report_mouse_t pointing_device_task_combined_user(report_mouse_t left_report, report_mouse_t right_report) {
-//#ifdef CONSOLE_ENABLE
-//    print("in pointing device task combined user\n");
-//#endif
+//
+////    print("combined_user\n");
 //    check_drag(&left_report);
-//    //    left_report.h = left_report.x;
-//    //    left_report.v = left_report.y;
-//    //    left_report.x = 0;
-//    //    left_report.y = 0;
 //    return pointing_device_combine_reports(left_report, right_report);
 //}
+
+report_mouse_t pointing_device_task_combined_kb(report_mouse_t left_report, report_mouse_t right_report) {
+//    print("combined_kb\n");
+    if (is_keyboard_master()) {
+            check_drag(&left_report);
+//    pointing_device_task_charybdis(&combined);
+    //        mouse_report = pointing_device_task_user(mouse_report);
+    }
+
+    return pointing_device_combine_reports(left_report, right_report);
+
+//    return combined;
+}
+
 
 #ifdef OLED_ENABLE
 
@@ -179,17 +203,5 @@ bool oled_task_user(void) {
 #endif
 
 
-void keyboard_post_init_user(void) {
-#ifdef CONSOLE_ENABLE
-    debug_enable=true;
-    debug_matrix=true;
-    debug_keyboard=true;
-    debug_mouse=true;
-#else
-    debug_enable=false;
-    debug_matrix=false;
-    debug_keyboard=false;
-    debug_mouse=false;
-#endif
-}
+
 
