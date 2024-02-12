@@ -1,5 +1,6 @@
 #include QMK_KEYBOARD_H
 #include "5x7_full_track.h"
+#include "features/achordion.h"
 
 #define _QWERTY 0
 //#define _DVORAK 1
@@ -63,6 +64,7 @@ void pointing_device_init_user(void) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (!process_achordion(keycode, record)) { return false; }
     switch (keycode) {
         case WYLD_AUTO_MS_TOG:
             if (record->event.pressed) {
@@ -74,6 +76,23 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
 }
 #endif
+
+bool achordion_chord(uint16_t tap_hold_keycode,
+                     keyrecord_t* tap_hold_record,
+                     uint16_t other_keycode,
+                     keyrecord_t* other_record) {
+
+  // Also allow same-hand holds when the other key is in the rows below the
+  // alphas. I need the `% (MATRIX_ROWS / 2)` because my keyboard is split.
+  if (other_record->event.key.row % (MATRIX_ROWS / 2) >= 5) { return true; }
+
+  // Otherwise, follow the opposite hands rule.
+  return achordion_opposite_hands(tap_hold_record, other_record);
+}
+
+void matrix_scan_user(void) {
+  achordion_task();
+}
 
 void keyboard_post_init_user(void) {
 #ifdef CONSOLE_ENABLE
