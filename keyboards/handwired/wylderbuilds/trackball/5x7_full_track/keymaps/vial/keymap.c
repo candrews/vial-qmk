@@ -82,12 +82,27 @@ bool achordion_chord(uint16_t tap_hold_keycode,
                      uint16_t other_keycode,
                      keyrecord_t* other_record) {
 
-  // Also allow same-hand holds when the other key is in the rows below the
-  // alphas. I need the `% (MATRIX_ROWS / 2)` because my keyboard is split.
-  if (other_record->event.key.row % (MATRIX_ROWS / 2) >= 5) { return true; }
+    switch (other_keycode) {
+        case QK_MOD_TAP ... QK_MOD_TAP_MAX:
+        case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
+            other_keycode &= 0xff;  // Get base keycode.
+    }
+    // Allow same-hand holds with non-alpha keys.
+    if (other_keycode < KC_A || other_keycode > KC_Z) {
+        return true;
+    }
 
-  // Otherwise, follow the opposite hands rule.
-  return achordion_opposite_hands(tap_hold_record, other_record);
+    // Otherwise, follow the opposite hands rule.
+    return achordion_opposite_hands(tap_hold_record, other_record);
+}
+
+// workaround from https://github.com/getreuer/qmk-keymap/issues/32#issuecomment-1500752527
+uint16_t achordion_timeout(uint16_t tap_hold_keycode) {
+  if (get_auto_mouse_enable() && IS_LAYER_ON(AUTO_MOUSE_DEFAULT_LAYER)) {
+    return 0;  // Bypass Achordion while mouse layer is on.
+  }
+
+  return 1000;
 }
 
 void matrix_scan_user(void) {
