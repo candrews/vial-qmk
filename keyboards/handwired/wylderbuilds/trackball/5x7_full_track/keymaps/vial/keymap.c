@@ -60,7 +60,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
 void pointing_device_init_user(void) {
-    set_auto_mouse_enable(true);
+    //set_auto_mouse_enable(true);
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
