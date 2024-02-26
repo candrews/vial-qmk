@@ -123,6 +123,13 @@ void keyboard_post_init_user(void) {
 #endif
 }
 
+layer_state_t layer_state_set_user(const layer_state_t layer_state) {
+    const uint8_t current_layer = get_highest_layer(layer_state);
+    charybdis_set_pointer_sniping_enabled(current_layer == _LOWER);
+    charybdis_set_pointer_dragscroll_enabled(current_layer == _RAISE);
+    return layer_state;
+}
+
 #if defined(ENCODER_MAP_ENABLE)
 // TWO ENCODERS
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
