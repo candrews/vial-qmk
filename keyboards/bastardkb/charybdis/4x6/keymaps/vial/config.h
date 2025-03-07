@@ -91,4 +91,4 @@
 #define PERMISSIVE_HOLD
 // End of Basic Config
 
-#define ACHORDION_STREAK
+#define CHORDAL_HOLD

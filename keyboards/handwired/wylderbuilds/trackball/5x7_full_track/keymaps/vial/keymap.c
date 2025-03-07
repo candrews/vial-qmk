@@ -1,6 +1,5 @@
 #include QMK_KEYBOARD_H
 #include "5x7_full_track.h"
-#include "features/achordion.h"
 
 #define _QWERTY 0
 //#define _DVORAK 1
@@ -16,6 +15,17 @@
 enum wyld_keycodes {
     WYLD_AUTO_MS_TOG = SAFE_RANGE
 };
+
+const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM =
+    LAYOUT_5x7(
+        'L', 'L', 'L', 'L', 'L', 'L', 'L',  'R', 'R', 'R', 'R', 'R', 'R', 'R',
+        'L', 'L', 'L', 'L', 'L', 'L', 'L',  'R', 'R', 'R', 'R', 'R', 'R', 'R',
+        'L', 'L', 'L', 'L', 'L', 'L', 'L', '*',  '*', 'R', 'R', 'R', 'R', 'R', 'R', 'R',
+        'L', 'L', 'L', 'L', 'L', 'L', 'L',  'R', 'R', 'R', 'R', 'R', 'R', 'R',
+        'L', 'L', 'L', 'L', 'L',                      'R', 'R', 'R', 'R', 'R',
+                       'L', 'L', 'L',  'R', 'R', 'R',
+                            'L', 'L'
+    );
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT_5x7(
@@ -57,57 +67,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                        SNIPING, DRGSCRL
         )
 };
-
-#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
-void pointing_device_init_user(void) {
-    //set_auto_mouse_enable(true);
-}
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (!process_achordion(keycode, record)) { return false; }
-    switch (keycode) {
-        case WYLD_AUTO_MS_TOG:
-            if (record->event.pressed) {
-                set_auto_mouse_enable(!get_auto_mouse_enable());
-            }
-            return false; // Skip all further processing of this key
-        default:
-            return true; // Process all other keycodes normally
-    }
-}
-#endif
-
-bool achordion_chord(uint16_t tap_hold_keycode,
-                     keyrecord_t* tap_hold_record,
-                     uint16_t other_keycode,
-                     keyrecord_t* other_record) {
-
-    switch (other_keycode) {
-        case QK_MOD_TAP ... QK_MOD_TAP_MAX:
-        case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
-            other_keycode &= 0xff;  // Get base keycode.
-    }
-    // Allow same-hand holds with non-alpha keys.
-    if (other_keycode < KC_A || other_keycode > KC_Z) {
-        return true;
-    }
-
-    // Otherwise, follow the opposite hands rule.
-    return achordion_opposite_hands(tap_hold_record, other_record);
-}
-
-// workaround from https://github.com/getreuer/qmk-keymap/issues/32#issuecomment-1500752527
-uint16_t achordion_timeout(uint16_t tap_hold_keycode) {
-  if (get_auto_mouse_enable() && IS_LAYER_ON(AUTO_MOUSE_DEFAULT_LAYER)) {
-    return 0;  // Bypass Achordion while mouse layer is on.
-  }
-
-  return 1000;
-}
-
-void matrix_scan_user(void) {
-  achordion_task();
-}
 
 void keyboard_post_init_user(void) {
 #ifdef CONSOLE_ENABLE
